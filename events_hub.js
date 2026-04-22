@@ -65,9 +65,9 @@ function renderEvents(eventsToRender) {
     const activeEvents = eventsToRender.filter(e => e.isActive !== false);
 
     grid.innerHTML = activeEvents.map(e => {
-        const regCount = allRegistrations.filter(r => r.eventId === e.id && (r.status === 'registered' || r.status === 'checked-in')).length;
+        const regCount = allRegistrations.filter(r => r.eventId === e.id && r.status !== 'cancelled').length;
         const capacity = parseInt(e.capacity) || 0;
-        const isFull = regCount >= capacity;
+        const isFull = regCount >= capacity && capacity > 0;
         
         return `
         <div class="event-card" onclick="location.href='details.html?id=${e.id}'">

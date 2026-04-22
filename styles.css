@@ -101,7 +101,7 @@ body {
     justify-content: center;
     text-align: center;
     position: relative;
-    background: url('../assets/hero_events_bg.png') center/cover no-repeat;
+    background: url('assets/hero_events_bg.png') center/cover no-repeat;
     margin-bottom: 50px;
 }
 
