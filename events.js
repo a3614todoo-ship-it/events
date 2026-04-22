@@ -204,8 +204,26 @@ function generateEventEmailHTML(data) {
                         <tr><td style="padding: 8px 0; color: #64748b;">報名序號</td><td style="padding: 8px 0; font-weight: bold; color: #1e293b;">${data.id.substring(0, 8).toUpperCase()}</td></tr>
                     </table>
                 </div>
+
+                <!-- 報到須知 -->
+                <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; background-color: #ffffff; margin-bottom: 25px;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 16px; color: #1e293b; display: flex; align-items: center;">📍 報到須知</h4>
+                    <p style="margin: 0; font-size: 14px; color: #475569; line-height: 1.6;">
+                        活動當天請憑「<strong>報名姓名</strong>」或「<strong>聯絡電話末三碼</strong>」向現場櫃檯人員報到即可。建議您提早於活動開始前 <strong>10 分鐘</strong> 抵達現場。
+                    </p>
+                </div>
+
+                <!-- 溫馨提醒 -->
+                <div style="background-color: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 20px; margin-bottom: 35px;">
+                    <h4 style="margin: 0 0 10px 0; font-size: 16px; color: #92400e;">⚠️ 溫馨提醒</h4>
+                    <p style="margin: 0; font-size: 14px; color: #b45309; line-height: 1.8;">
+                        為了讓更多喜愛藝文的朋友能參與活動，若您因故不克出席，請務必於活動開始 <strong>2 天前</strong> 聯繫我們。您的提前告知，將能讓候補的朋友順利遞補參與，感謝您的配合與體諒！
+                    </p>
+                </div>
+
                 <div style="text-align: center; border-top: 1px solid #f1f5f9; padding-top: 30px; margin-top: 20px;">
-                    <h4 style="margin: 0; font-size: 18px; color: #1e293b;">期待在活動現場見到您！</h4>
+                    <p style="margin: 0; font-size: 14px; color: #64748b; margin-bottom: 20px;">如果您對活動有任何疑問，歡迎隨時與我們聯繫。</p>
+                    <h4 style="margin: 0; font-size: 20px; color: #1e293b;">期待在藝境空間見到您！</h4>
                     <p style="margin: 15px 0 0 0; font-size: 14px; color: #94a3b8;">藝境空間 管理團隊 敬上</p>
                 </div>
             </div>
