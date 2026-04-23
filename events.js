@@ -184,55 +184,68 @@ function sendRegistrationEmail(data) {
 }
 
 function generateEventEmailHTML(data) {
-    const isWaitlist = (data.status === 'waitlist');
+    const status = data.status; // 'registered' | 'waitlist' | 'cancelled'
     const mainFont = 'system-ui, -apple-system, sans-serif';
-    const primaryBg = '#fdfbf7';  /* 淺米色 */
-    const accentColor = '#d97706'; /* 暖金色 */
-    const textMain = '#4a3728';    /* 深棕色 */
+    const primaryBg = '#fdfbf7';
+    const accentColor = (status === 'cancelled') ? '#8d7a6b' : '#d97706';
+    const textMain = '#4a3728';
     
+    // 根據狀態決定標題與描述
+    let titleText, subTitle, mainDesc, statusLabel;
+    if (status === 'cancelled') {
+        titleText = '報名取消確認';
+        subTitle = 'Registration Cancellation';
+        mainDesc = `您好，我們已收到您的取消申請，活動 <strong style="color: ${accentColor};">${data.eventName}</strong> 的報名已正式取消。感謝您主動告知，讓名額能及時釋出給其他參與者。`;
+        statusLabel = '已取消 (Cancelled)';
+    } else if (status === 'waitlist') {
+        titleText = '進入候補名單';
+        subTitle = 'Waitlist Confirmation';
+        mainDesc = `感謝您的參與！由於目前報名人數較多，您已進入活動 <strong style="color: ${accentColor};">${data.eventName}</strong> 的<strong>候補名單</strong>。若有名額釋出，我們將優先為您安排。`;
+        statusLabel = '候補中 (Waitlist)';
+    } else {
+        titleText = '報名成功確認';
+        subTitle = 'Registration Confirmed';
+        mainDesc = `恭喜您！您已成功報名活動 <strong style="color: ${accentColor};">${data.eventName}</strong>。我們非常期待您的參與，以下是您的報名資訊：`;
+        statusLabel = '報名成功 (Confirmed)';
+    }
+
     return `
     <div style="background-color: #f5f1ea; padding: 40px 20px; font-family: ${mainFont};">
         <div style="max-width: 600px; margin: 0 auto; background-color: ${primaryBg}; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 30px rgba(74, 55, 40, 0.1); border: 1px solid #e5e0d8;">
             <!-- 標頭區 -->
             <div style="background: #ffffff; padding: 45px 20px; text-align: center; border-bottom: 1px solid #f1ece4;">
                 <h1 style="margin: 0; font-size: 26px; color: ${textMain}; letter-spacing: 6px; font-weight: bold;">藝 境 空 間</h1>
-                <p style="margin: 10px 0 0 0; font-size: 14px; color: ${accentColor}; letter-spacing: 2px; text-transform: uppercase;">Event Registration Confirmation</p>
+                <p style="margin: 10px 0 0 0; font-size: 14px; color: ${accentColor}; letter-spacing: 2px; text-transform: uppercase;">${subTitle}</p>
             </div>
             
             <div style="padding: 40px; line-height: 1.8; color: ${textMain};">
                 <p style="margin-bottom: 20px; font-size: 16px;">親愛的 <strong>${data.userName}</strong> 您好，</p>
-                <p style="margin-bottom: 25px;">${isWaitlist ? '感謝您的參與！由於目前報名人數較多，您已進入<strong>候補名單</strong>。若有名額釋出，我們將優先為您安排並另行通知。' : `恭喜您！您已成功報名活動 <strong style="color: ${accentColor};">${data.eventName}</strong>。以下是您的報名資訊：`}</p>
+                <p style="margin-bottom: 30px;">${mainDesc}</p>
                 
                 <!-- 報名明細卡片 -->
                 <div style="background-color: #ffffff; padding: 25px; border-radius: 16px; border: 1px solid #eee; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
-                    <h3 style="margin: 0 0 15px 0; font-size: 18px; color: ${textMain}; border-bottom: 2px solid ${accentColor}; display: inline-block; padding-bottom: 5px;">📋 報名明細</h3>
+                    <h3 style="margin: 0 0 15px 0; font-size: 18px; color: ${textMain}; border-bottom: 2px solid ${accentColor}; display: inline-block; padding-bottom: 5px;">📋 活動資訊</h3>
                     <table style="width: 100%; border-collapse: collapse; font-size: 15px; margin-top: 15px;">
-                        <tr><td style="padding: 10px 0; color: #8d7a6b; width: 100px;">報名狀態</td><td style="padding: 10px 0; font-weight: bold; color: ${accentColor};">${isWaitlist ? '候補中 (Waitlist)' : '報名成功 (Confirmed)'}</td></tr>
+                        <tr><td style="padding: 10px 0; color: #8d7a6b; width: 100px;">當前狀態</td><td style="padding: 10px 0; font-weight: bold; color: ${accentColor};">${statusLabel}</td></tr>
                         <tr><td style="padding: 10px 0; color: #8d7a6b;">活動名稱</td><td style="padding: 10px 0; font-weight: bold;">${data.eventName}</td></tr>
                         <tr><td style="padding: 10px 0; color: #8d7a6b;">報名序號</td><td style="padding: 10px 0; font-family: monospace; font-size: 18px; color: ${textMain};">${data.id.substring(0, 8).toUpperCase()}</td></tr>
                     </table>
                 </div>
 
-                <!-- 報到須知 -->
+                ${status !== 'cancelled' ? `
+                <!-- 報到須知 (取消時不顯示) -->
                 <div style="border: 1px solid #e5e0d8; border-radius: 12px; padding: 20px; background-color: #ffffff; margin-bottom: 25px;">
                     <h4 style="margin: 0 0 10px 0; font-size: 15px; color: ${textMain};">📍 報到須知</h4>
                     <p style="margin: 0; font-size: 14px; color: #6b5a4d;">
                         活動當天請憑「<strong>報名姓名</strong>」或「<strong>聯絡電話末三碼</strong>」向現場櫃檯人員報到即可。建議您提早於活動開始前 <strong>10 分鐘</strong> 抵達現場。
                     </p>
                 </div>
+                ` : ''}
 
-                <!-- 溫馨提醒 -->
-                <div style="background-color: #fdfaf5; border: 1px solid #f3ede4; border-radius: 12px; padding: 20px; margin-bottom: 40px;">
-                    <h4 style="margin: 0 0 8px 0; font-size: 15px; color: ${accentColor};">⚠️ 溫馨提醒</h4>
-                    <p style="margin: 0; font-size: 14px; color: #8d7a6b;">
-                        為了讓更多喜愛藝文的朋友能參與活動，若您因故不克出席，請務必於活動開始 <strong>2 天前</strong> 聯繫我們。感謝您的配合與體諒！
-                    </p>
-                </div>
-
-                <div style="text-align: center; border-top: 1px solid #f1ece4; padding-top: 30px;">
-                    <p style="margin: 0; font-size: 14px; color: #8d7a6b; margin-bottom: 15px;">如果您對活動有任何疑問，歡迎隨時與我們聯繫。</p>
-                    <h4 style="margin: 0; font-size: 18px; color: ${textMain};">期待在藝境空間見到您！</h4>
-                    <p style="margin: 10px 0 0 0; font-size: 13px; color: #bcae9e;">藝境空間 管理團隊 敬上</p>
+                <div style="text-align: center; border-top: 1px solid #f1ece4; padding-top: 30px; margin-top: 20px;">
+                    <p style="margin: 0; font-size: 14px; color: #8d7a6b; margin-bottom: 15px;">${status === 'cancelled' ? '若有任何疑問，歡迎隨時聯繫我們。' : '期待在藝境空間見到您！'}</p>
+                    <h4 style="margin: 0; font-size: 18px; color: ${textMain};">藝境空間 ‧ 藝術與空間</h4>
+                    <p style="margin: 10px 0 0 0; font-size: 13px; color: #bcae9e;">管理團隊 敬上</p>
                 </div>
             </div>
         </div>
