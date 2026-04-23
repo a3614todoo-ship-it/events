@@ -3,22 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>藝境空間 | 活動專屬門戶</title>
+    <title>藝境空間 | 藝術與空間的活動報名系統</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Google Fonts: 襯線體更符合藝術氣息 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@300;400;700&display=swap" rel="stylesheet">
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
-    <!-- 導覽列 -->
-    <nav class="glass-nav">
-        <div class="nav-container">
-            <div class="logo">
-                <span class="logo-text">藝 境 <span>空 間</span></span>
-            </div>
+    <!-- 導航列 -->
+    <nav class="navbar">
+        <div class="nav-content container">
+            <div class="logo">藝境空間 ‧ <span style="font-weight: 300;">藝術與空間</span></div>
             <ul class="nav-links">
                 <li><a href="#" class="active">當期活動</a></li>
                 <li><a href="#about">關於我們</a></li>
@@ -27,39 +25,29 @@
         </div>
     </nav>
 
-    <!-- Hero 區塊 -->
+    <!-- Hero 區塊 (手繪風) -->
     <header class="hero">
         <div class="hero-overlay"></div>
         <div class="hero-content">
-            <h1 class="fade-in">探索舞台的無限可能</h1>
-            <p class="fade-in-delay">從大師講座到專業工作坊，為您的藝術之路注入靈魂。</p>
-            <div class="hero-btns fade-in-delay-2">
-                <a href="#active-events" class="btn-primary">立即查看</a>
-                <a href="#about" class="btn-secondary">了解更多</a>
-            </div>
+            <h1>探索舞台的無限可能</h1>
+            <p>從大師講座到專業工作坊，為您的藝術之路注入靈魂。</p>
         </div>
     </header>
 
-    <!-- 活動篩選與搜尋 -->
-    <section class="filter-section">
-        <div class="container">
-            <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" id="eventSearch" placeholder="搜尋活動名稱、內容...">
-            </div>
+    <!-- 搜尋區塊 -->
+    <section class="search-container">
+        <div class="search-wrapper">
+            <i class="fas fa-search"></i>
+            <input type="text" id="eventSearch" placeholder="搜尋想參加的藝術活動...">
         </div>
     </section>
 
     <!-- 當期活動列表 -->
-    <main id="active-events" class="events-container">
-        <div class="section-title">
-            <h2>當期精彩 <span>Events</span></h2>
-            <div class="title-underline"></div>
-        </div>
+    <main id="active-events" class="container">
         <div id="eventGrid" class="event-grid">
             <!-- 動態注入活動卡片 -->
-            <div class="loading-spinner">
-                <div class="spinner"></div>
+            <div style="grid-column: 1/-1; text-align: center; padding: 50px; color: var(--text-muted);">
+                <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 15px;"></i>
                 <p>正在載入精彩活動...</p>
             </div>
         </div>
@@ -73,18 +61,9 @@
                     <img src="assets/about_bg.png" alt="關於藝境">
                 </div>
                 <div class="about-info">
-                    <h3>藝術與空間的交會點</h3>
-                    <p>「藝境空間」致力於推廣戲曲文化與跨界藝術。我們不只是場地提供者，更是創作者的孵化器。透過多元的實體活動，讓傳統在現代生活中重新綻放。</p>
-                    <div class="stats">
-                        <div class="stat-item">
-                            <span class="num">50+</span>
-                            <span class="label">場專業活動</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="num">2000+</span>
-                            <span class="label">參與人次</span>
-                        </div>
-                    </div>
+                    <h3 style="font-size: 2.2rem; line-height: 1.4;">藝境空間｜<br><span style="font-weight: 300;">為創作而存在的活動報名系統</span></h3>
+                    <p style="margin-top: 20px;">創作者的時間，應該留給靈感，而不是行政。</p>
+                    <p style="font-weight: 700; color: var(--text-main); margin-top: 30px; font-size: 1.3rem;">這套活動報名系統的存在，只為一件事——<br>讓藝術家專心創作，其餘交給系統。</p>
                 </div>
             </div>
         </div>
@@ -92,17 +71,23 @@
 
     <!-- 頁尾 -->
     <footer>
-        <div class="footer-content">
-            <div class="footer-logo">藝境空間</div>
+        <div class="container">
+            <div style="font-family: 'Noto Serif TC', serif; font-size: 1.5rem; margin-bottom: 20px;">藝境空間</div>
             <p>&copy; 2026 Yisun Space. All Rights Reserved.</p>
-            <div class="social-links">
-                <a href="#"><i class="fab fa-facebook"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fas fa-envelope"></i></a>
+            <div style="margin-top: 20px; display: flex; justify-content: center; gap: 20px; font-size: 1.2rem;">
+                <a href="#" style="color: var(--text-muted);"><i class="fab fa-facebook"></i></a>
+                <a href="#" style="color: var(--text-muted);"><i class="fab fa-instagram"></i></a>
+                <a href="#" style="color: var(--text-muted);"><i class="fas fa-envelope"></i></a>
             </div>
         </div>
     </footer>
 
     <script src="events_hub.js"></script>
+    <script>
+        // 簡單的搜尋監聽同步至 events_hub.js
+        document.getElementById('eventSearch').addEventListener('input', (e) => {
+            if (window.filterEvents) window.filterEvents(e.target.value);
+        });
+    </script>
 </body>
 </html>

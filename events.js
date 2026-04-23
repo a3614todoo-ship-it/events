@@ -59,17 +59,21 @@ async function loadEventData() {
             
             const cap = currentEvent ? (parseInt(currentEvent.capacity) || 0) : 0;
             const statusEl = document.getElementById('regStatus');
+            const fullNotice = document.getElementById('fullNotice');
+            
             if (statusEl) {
-                statusEl.innerHTML = `<strong style="color:#8b5cf6; font-size:1.4rem;">${registrationsCount}</strong> / ${cap}`;
+                statusEl.innerHTML = `<strong style="color:var(--accent); font-size:1.4rem;">${registrationsCount}</strong> / ${cap}`;
                 
                 // 額滿檢查
                 const submitBtn = document.getElementById('submitBtn');
                 if (registrationsCount >= cap && cap > 0) {
-                    submitBtn.textContent = '名額已滿 (轉為遞補)';
+                    if (fullNotice) fullNotice.style.display = 'block';
+                    submitBtn.textContent = '加入候補登記';
                     submitBtn.style.background = 'linear-gradient(135deg, #64748b, #475569)';
                 } else {
+                    if (fullNotice) fullNotice.style.display = 'none';
                     submitBtn.textContent = '確認報名';
-                    submitBtn.style.background = 'linear-gradient(135deg, #7c3aed, #ec4899)';
+                    submitBtn.style.background = 'linear-gradient(135deg, #d97706, #f59e0b)';
                 }
             }
         });
@@ -182,49 +186,53 @@ function sendRegistrationEmail(data) {
 function generateEventEmailHTML(data) {
     const isWaitlist = (data.status === 'waitlist');
     const mainFont = 'system-ui, -apple-system, sans-serif';
-    const primaryColor = '#8b5cf6';
-    const accentColor = isWaitlist ? '#f59e0b' : '#10b981';
+    const primaryBg = '#fdfbf7';  /* 淺米色 */
+    const accentColor = '#d97706'; /* 暖金色 */
+    const textMain = '#4a3728';    /* 深棕色 */
     
     return `
-    <div style="background-color: #f8fafc; padding: 40px 20px; font-family: ${mainFont};">
-        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(139, 92, 246, 0.1);">
-            <div style="background: linear-gradient(135deg, #4f46e5, #ec4899); padding: 40px 20px; text-align: center; color: #ffffff;">
-                <h1 style="margin: 0; font-size: 28px; letter-spacing: 4px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">藝 境 空 間</h1>
-                <p style="margin: 12px 0 0 0; font-size: 15px; opacity: 0.95; letter-spacing: 1px;">活動報名確認信</p>
+    <div style="background-color: #f5f1ea; padding: 40px 20px; font-family: ${mainFont};">
+        <div style="max-width: 600px; margin: 0 auto; background-color: ${primaryBg}; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 30px rgba(74, 55, 40, 0.1); border: 1px solid #e5e0d8;">
+            <!-- 標頭區 -->
+            <div style="background: #ffffff; padding: 45px 20px; text-align: center; border-bottom: 1px solid #f1ece4;">
+                <h1 style="margin: 0; font-size: 26px; color: ${textMain}; letter-spacing: 6px; font-weight: bold;">藝 境 空 間</h1>
+                <p style="margin: 10px 0 0 0; font-size: 14px; color: ${accentColor}; letter-spacing: 2px; text-transform: uppercase;">Event Registration Confirmation</p>
             </div>
-            <div style="padding: 40px; line-height: 1.6; color: #334155;">
-                <p style="margin-bottom: 20px;">親愛的 <strong>${data.userName}</strong> 您好，</p>
-                <p style="margin-bottom: 25px;">${isWaitlist ? '感謝您的參與！由於目前報名人數較多，您已進入<strong>候補名單</strong>。若有名額釋出，我們將優先為您安排並另行通知。' : `恭喜您！您已成功報名活動 <strong style="color: ${primaryColor};">${data.eventName}</strong>。以下是您的報名資訊：`}</p>
+            
+            <div style="padding: 40px; line-height: 1.8; color: ${textMain};">
+                <p style="margin-bottom: 20px; font-size: 16px;">親愛的 <strong>${data.userName}</strong> 您好，</p>
+                <p style="margin-bottom: 25px;">${isWaitlist ? '感謝您的參與！由於目前報名人數較多，您已進入<strong>候補名單</strong>。若有名額釋出，我們將優先為您安排並另行通知。' : `恭喜您！您已成功報名活動 <strong style="color: ${accentColor};">${data.eventName}</strong>。以下是您的報名資訊：`}</p>
                 
-                <div style="background-color: #f8fafc; padding: 25px; border-radius: 8px; border-left: 5px solid ${accentColor}; margin-bottom: 30px;">
-                    <h3 style="margin: 0 0 15px 0; font-size: 18px; color: #1e293b;">📋 報名明細</h3>
-                    <table style="width: 100%; border-collapse: collapse; font-size: 15px;">
-                        <tr><td style="padding: 8px 0; color: #64748b; width: 100px;">報名狀態</td><td style="padding: 8px 0; font-weight: bold; color: ${accentColor};">${isWaitlist ? '候補中 (Waitlist)' : '報名成功 (Confirmed)'}</td></tr>
-                        <tr><td style="padding: 8px 0; color: #64748b;">活動名稱</td><td style="padding: 8px 0; font-weight: bold; color: #1e293b;">${data.eventName}</td></tr>
-                        <tr><td style="padding: 8px 0; color: #64748b;">報名序號</td><td style="padding: 8px 0; font-weight: bold; color: #1e293b;">${data.id.substring(0, 8).toUpperCase()}</td></tr>
+                <!-- 報名明細卡片 -->
+                <div style="background-color: #ffffff; padding: 25px; border-radius: 16px; border: 1px solid #eee; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
+                    <h3 style="margin: 0 0 15px 0; font-size: 18px; color: ${textMain}; border-bottom: 2px solid ${accentColor}; display: inline-block; padding-bottom: 5px;">📋 報名明細</h3>
+                    <table style="width: 100%; border-collapse: collapse; font-size: 15px; margin-top: 15px;">
+                        <tr><td style="padding: 10px 0; color: #8d7a6b; width: 100px;">報名狀態</td><td style="padding: 10px 0; font-weight: bold; color: ${accentColor};">${isWaitlist ? '候補中 (Waitlist)' : '報名成功 (Confirmed)'}</td></tr>
+                        <tr><td style="padding: 10px 0; color: #8d7a6b;">活動名稱</td><td style="padding: 10px 0; font-weight: bold;">${data.eventName}</td></tr>
+                        <tr><td style="padding: 10px 0; color: #8d7a6b;">報名序號</td><td style="padding: 10px 0; font-family: monospace; font-size: 18px; color: ${textMain};">${data.id.substring(0, 8).toUpperCase()}</td></tr>
                     </table>
                 </div>
 
                 <!-- 報到須知 -->
-                <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; background-color: #ffffff; margin-bottom: 25px;">
-                    <h4 style="margin: 0 0 12px 0; font-size: 16px; color: #1e293b; display: flex; align-items: center;">📍 報到須知</h4>
-                    <p style="margin: 0; font-size: 14px; color: #475569; line-height: 1.6;">
+                <div style="border: 1px solid #e5e0d8; border-radius: 12px; padding: 20px; background-color: #ffffff; margin-bottom: 25px;">
+                    <h4 style="margin: 0 0 10px 0; font-size: 15px; color: ${textMain};">📍 報到須知</h4>
+                    <p style="margin: 0; font-size: 14px; color: #6b5a4d;">
                         活動當天請憑「<strong>報名姓名</strong>」或「<strong>聯絡電話末三碼</strong>」向現場櫃檯人員報到即可。建議您提早於活動開始前 <strong>10 分鐘</strong> 抵達現場。
                     </p>
                 </div>
 
                 <!-- 溫馨提醒 -->
-                <div style="background-color: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 20px; margin-bottom: 35px;">
-                    <h4 style="margin: 0 0 10px 0; font-size: 16px; color: #92400e;">⚠️ 溫馨提醒</h4>
-                    <p style="margin: 0; font-size: 14px; color: #b45309; line-height: 1.8;">
-                        為了讓更多喜愛藝文的朋友能參與活動，若您因故不克出席，請務必於活動開始 <strong>2 天前</strong> 聯繫我們。您的提前告知，將能讓候補的朋友順利遞補參與，感謝您的配合與體諒！
+                <div style="background-color: #fdfaf5; border: 1px solid #f3ede4; border-radius: 12px; padding: 20px; margin-bottom: 40px;">
+                    <h4 style="margin: 0 0 8px 0; font-size: 15px; color: ${accentColor};">⚠️ 溫馨提醒</h4>
+                    <p style="margin: 0; font-size: 14px; color: #8d7a6b;">
+                        為了讓更多喜愛藝文的朋友能參與活動，若您因故不克出席，請務必於活動開始 <strong>2 天前</strong> 聯繫我們。感謝您的配合與體諒！
                     </p>
                 </div>
 
-                <div style="text-align: center; border-top: 1px solid #f1f5f9; padding-top: 30px; margin-top: 20px;">
-                    <p style="margin: 0; font-size: 14px; color: #64748b; margin-bottom: 20px;">如果您對活動有任何疑問，歡迎隨時與我們聯繫。</p>
-                    <h4 style="margin: 0; font-size: 20px; color: #1e293b;">期待在藝境空間見到您！</h4>
-                    <p style="margin: 15px 0 0 0; font-size: 14px; color: #94a3b8;">藝境空間 管理團隊 敬上</p>
+                <div style="text-align: center; border-top: 1px solid #f1ece4; padding-top: 30px;">
+                    <p style="margin: 0; font-size: 14px; color: #8d7a6b; margin-bottom: 15px;">如果您對活動有任何疑問，歡迎隨時與我們聯繫。</p>
+                    <h4 style="margin: 0; font-size: 18px; color: ${textMain};">期待在藝境空間見到您！</h4>
+                    <p style="margin: 10px 0 0 0; font-size: 13px; color: #bcae9e;">藝境空間 管理團隊 敬上</p>
                 </div>
             </div>
         </div>

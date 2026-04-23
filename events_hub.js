@@ -71,23 +71,20 @@ function renderEvents(eventsToRender) {
         
         return `
         <div class="event-card" onclick="location.href='details.html?id=${e.id}'">
-            <div class="event-img">
-                <img src="${e.image || '../assets/default_event.png'}" alt="${e.name}">
+            <div class="event-img-wrapper">
+                <img src="${e.image || 'assets/hero_events_bg.png'}" class="event-img" alt="${e.name}">
+                ${isFull ? '<div class="event-badge">已額滿</div>' : ''}
             </div>
             <div class="event-info">
-                <span class="event-tag">#精選活動</span>
                 <h3>${e.name}</h3>
-                <div class="event-meta">
-                    <span><i class="far fa-calendar-alt"></i> ${e.date}</span>
-                    <span><i class="far fa-clock"></i> ${e.time}</span>
-                    <span><i class="fas fa-map-marker-alt"></i> ${e.location}</span>
-                </div>
-                <div class="event-footer">
-                    <div class="event-price">
-                        ${isFull ? '<span style="color:#ef4444; font-size:0.9rem;">報名已額滿</span>' : '<span style="color:#10b981; font-size:0.9rem;">熱烈報名中</span>'}
-                    </div>
-                    <a href="details.html?id=${e.id}" class="btn-card">查看詳情</a>
-                </div>
+                <ul class="event-meta">
+                    <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 10px;"><i class="far fa-calendar-alt"></i> ${e.date}</li>
+                    <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 10px;"><i class="far fa-clock"></i> ${e.time}</li>
+                    <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 10px;"><i class="fas fa-map-marker-alt"></i> ${e.location}</li>
+                    <li style="margin-top:15px; color:var(--accent); font-weight:bold; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-users"></i> 已報名 ${regCount} / ${capacity} 人
+                    </li>
+                </ul>
             </div>
         </div>
         `;

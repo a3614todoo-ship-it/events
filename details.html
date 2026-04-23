@@ -6,7 +6,8 @@
     <title>活動詳情 | 藝境空間</title>
     <link rel="stylesheet" href="details.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@300;400;700&display=swap" rel="stylesheet">
+    
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
@@ -15,77 +16,68 @@
 </head>
 <body>
     <div class="container">
-        <header class="event-header">
-            <a href="index.html" style="color: var(--text-muted); text-decoration: none; margin-bottom: 20px; display: inline-block;">
-                <i class="fas fa-arrow-left"></i> 返回活動列表
-            </a>
-            <h1 id="eventName">載入中...</h1>
-        </header>
+        <!-- 返回按鈕 -->
+        <a href="index.html" class="back-link">
+            <i class="fas fa-arrow-left"></i> 返回活動列表
+        </a>
 
-        <div class="event-main-content">
-            <div class="event-image-section">
-                <img id="eventImage" src="../assets/default_event.png" alt="活動海報">
-                <div class="event-details-text">
-                    <h2>活動詳情</h2>
-                    <div id="eventDescription" class="description-box">
-                        正在取得活動詳細資訊...
-                    </div>
+        <div class="event-detail-layout">
+            <!-- 左側：詳細資訊 -->
+            <div class="detail-main">
+                <img id="eventImage" src="assets/hero_events_bg.png" class="detail-img" alt="活動海報">
+                <h1 id="eventName" class="event-title">載入中...</h1>
+                <div id="eventDescription" class="event-content">
+                    正在準備精彩的活動內容，請稍候...
                 </div>
             </div>
 
-            <aside class="event-sidebar">
-                <div class="info-item">
-                    <i class="far fa-calendar-alt"></i> <span id="eventDate">載入中...</span>
-                </div>
-                <div class="info-item">
-                    <i class="far fa-clock"></i> <span id="eventTime">載入中...</span>
-                </div>
-                <div class="info-item">
-                    <i class="fas fa-map-marker-alt"></i> <span id="eventLocation">載入中...</span>
-                </div>
-                <div class="info-item">
-                    <i class="fas fa-users"></i> 報名狀況：<span id="regStatus">0 / 0</span> 人
-                </div>
+            <!-- 右側：報名側邊欄 -->
+            <div class="reg-sidebar">
+                <div class="reg-card">
+                    <ul class="reg-info-list">
+                        <li><i class="far fa-calendar-alt"></i> <span id="eventDate">...</span></li>
+                        <li><i class="far fa-clock"></i> <span id="eventTime">...</span></li>
+                        <li><i class="fas fa-map-marker-alt"></i> <span id="eventLocation">...</span></li>
+                        <li><i class="fas fa-users"></i> 報名狀況：<span id="regStatus">載入中</span></li>
+                    </ul>
 
-                <!-- 報名表單區 -->
-                <div id="registrationArea" class="registration-form">
-                    <h3>觀眾報名表</h3>
+                    <h3 class="form-title">觀眾報名表</h3>
+                    <div id="fullNotice" class="full-notice">目前名額已滿，報名將自動進入候補名單。</div>
+                    
                     <form id="regForm">
                         <div class="form-group">
-                            <label>真實姓名</label>
+                            <label for="userName">真實姓名</label>
                             <input type="text" id="userName" placeholder="請輸入姓名" required>
                         </div>
                         <div class="form-group">
-                            <label>聯絡電話</label>
+                            <label for="userPhone">聯絡電話</label>
                             <input type="tel" id="userPhone" placeholder="請輸入手機號碼" required>
                         </div>
                         <div class="form-group">
-                            <label>聯絡信箱</label>
-                            <input type="email" id="userEmail" placeholder="系統將寄送通知信至此" required>
+                            <label for="userEmail">電子郵件</label>
+                            <input type="email" id="userEmail" placeholder="用於接收報名確認信" required>
                         </div>
-                        <div id="customFields"></div>
-                        <button type="submit" class="btn-submit" id="submitBtn">確認報名</button>
+                        <button type="submit" id="submitBtn" class="btn-submit">確認報名</button>
                     </form>
                 </div>
-            </aside>
+            </div>
         </div>
     </div>
 
-    <!-- 成功彈窗 (移植自定案版) -->
-    <div id="successModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 2000; justify-content: center; align-items: center; padding: 20px;">
-        <div style="background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; max-width: 450px; width: 100%; padding: 40px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
-            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #10b981, #3b82f6); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px; box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);">
-                <i class="fas fa-check" style="color: white; font-size: 35px;"></i>
+    <!-- 成功彈窗 (手繪藝術風版) -->
+    <div id="successModal" style="display: none; position: fixed; inset: 0; background: rgba(74, 55, 40, 0.4); backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: center; padding: 20px;">
+        <div style="background: #ffffff; border-radius: 40px; max-width: 480px; width: 100%; padding: 50px; text-align: center; box-shadow: 0 40px 100px rgba(74, 55, 40, 0.2); border: 1px solid var(--border);">
+            <div style="width: 100px; height: 100px; background: #fdfbf7; border: 2px solid var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px;">
+                <i class="fas fa-check" style="color: var(--accent); font-size: 40px;"></i>
             </div>
-            <h2 id="successModalTitle" style="color: white; margin-bottom: 15px; font-family: 'Noto Serif TC', serif;">報名成功！</h2>
-            <p id="successModalDesc" style="color: #94a3b8; line-height: 1.6; margin-bottom: 30px;">感謝您的參與，詳細資訊已發送至您的信箱。</p>
-            <button onclick="closeSuccessModal()" style="width: 100%; padding: 15px; background: #8b5cf6; border: none; border-radius: 50px; color: white; font-weight: 600; cursor: pointer; transition: 0.3s;">
+            <h2 id="successModalTitle" style="color: var(--text-main); margin-bottom: 20px; font-family: 'Noto Serif TC', serif; font-size: 2.2rem;">報名成功！</h2>
+            <p id="successModalDesc" style="color: var(--text-muted); line-height: 1.8; margin-bottom: 40px; font-size: 1.1rem;">感謝您的參與，詳細資訊已發送至您的信箱。</p>
+            <button onclick="closeSuccessModal()" style="width: 100%; padding: 18px; background: var(--text-main); border: none; border-radius: 50px; color: white; font-weight: 700; cursor: pointer; transition: 0.3s; font-size: 1.1rem;">
                 返回活動列表
             </button>
         </div>
     </div>
 
-    <!-- 載入邏輯 -->
     <script src="events.js"></script>
 </body>
 </html>
